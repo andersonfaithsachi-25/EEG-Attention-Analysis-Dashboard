@@ -20,17 +20,13 @@ function EEG_AttentionDashboard()
 clc;
 close all;
 
-%% ========================================================
 % MAIN FIGURE
-% =========================================================
 fig = uifigure(...
     'Name','EEG Attention Analysis Suite',...
     'Color',[0.08 0.08 0.10],...
     'Position',[50 30 1550 950]);
 
-%% ========================================================
 % TITLE
-% =========================================================
 uilabel(fig,...
     'Text','EEG ATTENTION ANALYSIS SUITE',...
     'FontSize',28,...
@@ -38,18 +34,14 @@ uilabel(fig,...
     'FontColor','white',...
     'Position',[500 800 600 40]);
 
-%% ========================================================
 % LOAD BUTTON
-% =========================================================
 btnLoad = uibutton(fig,...
     'push',...
     'Text','Load EEG Dataset',...
     'FontSize',16,...
     'Position',[40 790 200 45]);
 
-%% ========================================================
 % SAVE BUTTON
-% =========================================================
 btnSave = uibutton(fig,...
     'push',...
     'Text','Save Results',...
@@ -58,7 +50,6 @@ btnSave = uibutton(fig,...
 
 %% ========================================================
 % ATTENTION SCORE PANEL
-% =========================================================
 scorePanel = uipanel(fig,...
     'Title','Live Attention State',...
     'FontSize',20,...
@@ -110,9 +101,7 @@ scoreNumber = uilabel(scorePanel,...
     'HorizontalAlignment','center',...
     'Position',[130 220 120 50]);
 
-%% ========================================================
 % BIOMARKER PANEL
-% =========================================================
 bioPanel = uipanel(fig,...
     'Title','Biomarkers',...
     'FontSize',20,...
@@ -129,7 +118,6 @@ txtBio = uitextarea(bioPanel,...
 
 %% ========================================================
 % PSD AXES
-% =========================================================
 axPSD = uiaxes(fig,...
     'Position',[470 400 1020 360]);
 
@@ -160,9 +148,8 @@ ylabel(axPSD,'Power (dB)',...
 
 grid(axPSD,'on');
 
-%% ========================================================
+
 % BAR GRAPH AXES
-% =========================================================
 axBar = uiaxes(fig,...
     'Position',[470 40 1020 300]);
 
@@ -183,21 +170,16 @@ title(axBar,'Attention Biomarkers',...
 
 grid(axBar,'on');
 
-%% ========================================================
 % STORAGE VARIABLE
-% =========================================================
 results = [];
 
-%% ========================================================
 % BUTTON CALLBACKS
-% =========================================================
 btnLoad.ButtonPushedFcn = @(btn,event) loadEEG();
 
 btnSave.ButtonPushedFcn = @(btn,event) saveResults();
 
 %% ========================================================
 % LOAD EEG FUNCTION
-% =========================================================
 function loadEEG()
 
     %% FILE SELECT
@@ -241,6 +223,7 @@ function loadEEG()
     %% REMOVE DC OFFSET
     signal = signal - mean(signal,2);
 
+%% ========================================================
     %% FFT PSD
     x = signal';
 
@@ -315,7 +298,8 @@ function loadEEG()
         frontal_idx = validIdx(sortIdx(end-kN+1:end));
 
     end
-
+    
+%% ========================================================
     %% BIOMARKERS
     frontal_theta = mean(theta_power(frontal_idx));
 
@@ -408,12 +392,14 @@ function loadEEG()
 
     end
 
+%% ========================================================
     %% UPDATE MAIN DISPLAY
     scoreGauge.Value = attention_score;
 
     attentionText.Text = attention_state;
 
     scoreNumber.Text = sprintf('%.0f',attention_score);
+
 
     %% BIOMARKER TEXT
     biomarkerText = sprintf([ ...
@@ -434,9 +420,7 @@ function loadEEG()
 
     txtBio.Value = biomarkerText;
 
-    %% ========================================================
     % CLEAN PSD PLOT
-    %% ========================================================
     cla(axPSD);
 
     avgPSD = mean(pxx,2);
@@ -465,6 +449,7 @@ function loadEEG()
 
     axPSD.YLim = [yMin yMax];
 
+%% ========================================================
     %% EEG BAND OVERLAYS
 
     % Theta
@@ -500,9 +485,8 @@ function loadEEG()
 
     hold(axPSD,'off');
 
-    %% ========================================================
+%% ========================================================
     % BAR GRAPH
-    %% ========================================================
     cla(axBar);
 
     vals = [
@@ -523,6 +507,7 @@ function loadEEG()
         'Entropy'
     };
 
+%% ========================================================
     %% STORE RESULTS
     results = struct;
 
@@ -550,7 +535,6 @@ end
 
 %% ========================================================
 % SAVE RESULTS FUNCTION
-% ========================================================
 function saveResults()
 
     if isempty(results)
